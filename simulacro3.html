@@ -286,7 +286,7 @@ const QBANK = [
     ref:"CPEUM (2025), Art. 94 — reforma judicial 2024",
     p:"La reforma constitucional de 2024 modificó sustancialmente la integración y el método de designación de los miembros del Poder Judicial Federal, incluyendo a la SCJN.", pt:"Reforma judicial 2024",
     q:"¿Cuál es la diferencia central en el método de integración de la SCJN antes y después de la reforma judicial de 2024?",
-    o:["Antes eran designados por el Ejecutivo con ratificación del Senado; tras la reforma son elegidos por voto ciudadano directo.",
+    o:["Antes eran propuestos por el Ejecutivo con ratificación del Senado; tras la reforma son elegidos por voto ciudadano directo.",
        "Antes eran electos popularmente; tras la reforma son designados por el Consejo de la Judicatura.",
        "La reforma solo cambió el número de ministros, no el método de designación."],
     c:0,
@@ -626,7 +626,7 @@ const QBANK = [
     ref:"LGIPE (2024), Art. 163 y ss.; CPEUM Art. 53",
     p:null, pt:null,
     q:"¿Cuál es la composición de un Consejo Distrital del INE y qué tipo de órgano es la Junta Distrital Ejecutiva?",
-    o:["El Consejo Distrital es un órgano temporal colegiado con un Consejero Presidente y 4 consejeros distritales que sesionan durante el proceso electoral; la Junta Distrital Ejecutiva es el órgano permanente técnico-operativo del distrito.",
+    o:["El Consejo Distrital es un órgano temporal colegiado con un Consejero Presidente y 6 consejeros distritales que sesionan durante el proceso electoral; la Junta Distrital Ejecutiva es el órgano permanente técnico-operativo del distrito.",
        "El Consejo Distrital es permanente e integrado por 5 consejeros; la Junta Distrital es temporal.",
        "Ambos son órganos permanentes con las mismas funciones en cada uno de los 300 distritos."],
     c:0,
@@ -650,7 +650,7 @@ const QBANK = [
     p:"El SPEN es el sistema de carrera del personal del INE y los OPLEs. Su diseño busca garantizar la profesionalización y la independencia del personal frente a influencias políticas.", pt:"Finalidad del SPEN",
     q:"¿Cuál es la finalidad constitucional y legal del Servicio Profesional Electoral Nacional (SPEN) más allá de ser un sistema de recursos humanos?",
     o:["Garantizar la profesionalización, imparcialidad e independencia del personal electoral mediante criterios objetivos de ingreso, evaluación y permanencia, asegurando la continuidad institucional.",
-       "Garantizar la lealtad política del personal del INE hacia los consejeros electorales en turno.",
+       "Garantizar la lealtad política del personal del INE hacia los electorales en turno.",
        "Facilitar la contratación temporal de personal durante los procesos electorales."],
     c:0,
     ex:"El SPEN tiene como finalidad constitucional garantizar que el personal que opera las elecciones (directivo, ejecutivo y técnico del INE y los OPLEs) sea profesional, imparcial e independiente, asegurando así la calidad y continuidad de la función electoral." },
@@ -694,6 +694,16 @@ const SS = {
 /* ═══════════════════════════════════════
    INICIO — orden aleatorio cada sesión
 ═══════════════════════════════════════ */
+function shuffleOptions(q){
+  // Creates a fresh copy of the question with options in random order
+  const indices = shuffle([0,1,2].slice(0, q.o.length));
+  return {
+    ...q,
+    o: indices.map(i => q.o[i]),
+    c: indices.indexOf(q.c)
+  };
+}
+
 function startExam(){
   const byArea = {};
   QBANK.forEach(q => { if(!byArea[q.sa]) byArea[q.sa]=[]; byArea[q.sa].push(q); });
@@ -702,7 +712,7 @@ function startExam(){
     ...byArea["1.1"],...byArea["1.2"],...byArea["1.3"],...byArea["1.4"],
     ...byArea["2.1"],...byArea["2.2"],...byArea["2.3"],...byArea["2.4"],...byArea["2.5"],...byArea["2.6"],
     ...byArea["3.1"],...byArea["3.2"],...byArea["3.3"]
-  ]);
+  ]).map(shuffleOptions);  // ← baraja opciones en cada sesión
   answers  = new Array(Q.length).fill(null);
   revealed = new Array(Q.length).fill(false);
   current  = 0;
